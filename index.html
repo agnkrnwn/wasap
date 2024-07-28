@@ -1,76 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <title>WhatsApp Chat Button Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aesthetic Quotes Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&family=Montserrat:wght@400;700&family=Dancing+Script&family=Pacifico&family=Lobster&family=Satisfy&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="max-w-xl w-full bg-white bg-opacity-80 backdrop-blur-lg rounded-lg shadow-2xl p-8 mb-8">
+        <h1 class="text-4xl font-bold text-center mb-6 font-playfair text-purple-800">Aesthetic Quotes</h1>
+        
+        <div class="flex space-x-2 mb-4">
+            <button id="generate-btn" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
+                Generate Quote
+            </button>
+            <button id="toggle-size-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
+                Toggle Size
+            </button>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select id="category" class="w-full p-2 rounded border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="random">Random</option>
+                    <option value="indo">Indo</option>
+                    <option value="islamicQuote">Islamic Quote</option>
+                    <option value="film">film</option>
+                    <option value="quote">quote</option>
+                    <option value="beauty">Beauty</option>
+                    <option value="coffee">Coffee</option>
+                    <option value="friendship">Friendship</option>
+                    <option value="habits">Habits</option>
+                    <option value="happiness">Happiness</option>
+                    <option value="life">Life</option>
+                    <option value="loneliness">Loneliness</option>
+                    <option value="love">Love</option>
+                    <option value="marriage">Marriage</option>
+                    <option value="night">Night</option>
+                    <option value="risk">Risk</option>
+                    <option value="sadness">Sadness</option>
+                    <option value="sport">Sport</option>
+                    <option value="success">Success</option>
+                    <option value="travel">Travel</option>
+                </select>
+                </select>
+            </div>
+            <div>
+                <label for="font" class="block text-sm font-medium text-gray-700 mb-1">Font</label>
+                <select id="font" class="w-full p-2 rounded border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Lobster">Lobster</option>
+                    <option value="Satisfy">Satisfy</option>
+                    <option value="Great Vibes">Great Vibes</option>
+                </select>
+            </div>
+        </div>
 
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          Generate WhatsApp Chat Button
-        </div>
-        <div class="card-body">
-          <form>
-            <div class="form-group">
-              <label for="phoneNumber">Phone Number (Include Country Code):</label>
-              <input type="text" class="form-control" id="phoneNumber" placeholder="E.g., 1234567890" required>
+        <button id="download-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105 mb-4">
+            Download Image
+        </button>
+
+        <button id="toggle-custom-menu" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105 mb-4">
+            Toggle Custom Menu
+        </button>
+
+        <div id="custom-menu" class="hidden">
+            
+
+            <div class="mb-4">
+                <label for="bgStyle" class="block text-sm font-medium text-gray-700 mb-1">Background Style</label>
+                <select id="bgStyle" class="w-full p-2 rounded border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="gradient">Gradient</option>
+                    <option value="solid">Solid Color</option>
+                    <option value="pattern">Pattern</option>
+                </select>
             </div>
-            <div class="form-group">
-              <label for="message">Message (Optional):</label>
-              <textarea class="form-control" id="message" rows="3" placeholder="Enter your message"></textarea>
+
+            <div id="colorPickers" class="flex flex-col sm:flex-row gap-4 mb-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Color 1</label>
+                    <div id="color1Picker" class="w-full"></div>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Color 2</label>
+                    <div id="color2Picker" class="w-full"></div>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Font Color</label>
+                    <div id="fontColorPicker"></div>
+                </div>
             </div>
-            <button type="button" class="btn btn-primary" id="generateBtn">Generate WhatsApp Chat Button</button>
-          </form>
-          <div class="mt-3" id="result" style="display: none;">
-            <p>Generated WhatsApp Chat Button:</p>
-            <a href="#" id="whatsappLink" target="_blank" class="btn btn-success">Chat Sekarang</a>
-            <button id="copyBtn" class="btn btn-secondary ml-2">Salin Link</button>
-          </div>
+            
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="fontSize" class="block text-sm font-medium text-gray-700 mb-1">Font Size</label>
+                    <input type="range" id="fontSize" min="20" max="80" value="50" class="w-full">
+                </div>
+                <div>
+                    <label for="lineHeight" class="block text-sm font-medium text-gray-700 mb-1">Line Height</label>
+                    <input type="range" id="lineHeight" min="1" max="3" step="0.1" value="1.5" class="w-full">
+                </div>
+            </div>
+
+            <button id="reset-btn" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105 mb-4">
+                Reset to Default
+            </button>
         </div>
-      </div>
     </div>
-  </div>
-</div>
 
-<script>
-  document.getElementById("generateBtn").addEventListener("click", function() {
-    var phoneNumber = document.getElementById("phoneNumber").value;
-    var message = document.getElementById("message").value;
-    
-    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-    if (isMobile) {
-      var whatsappLink = "whatsapp://send?phone=" + phoneNumber + "&text=" + encodeURIComponent(message);
-      document.getElementById("whatsappLink").href = whatsappLink;
-    } else {
-      var webLink = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
-      document.getElementById("whatsappLink").href = webLink;
-    }
-    
-    document.getElementById("result").style.display = "block";
-  });
-  
-  document.getElementById("copyBtn").addEventListener("click", function() {
-    var whatsappLink = document.getElementById("whatsappLink").href;
-    copyToClipboard(whatsappLink);
-    alert("Link WhatsApp telah disalin ke clipboard.");
-  });
-  
-  function copyToClipboard(text) {
-    var tempInput = document.createElement("input");
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
-  }
-</script>
+    <div id="preview-container" class="bg-white p-4 rounded-lg shadow-2xl mb-4" style="max-width: 100%; overflow: hidden;">
+        <canvas id="quoteCanvas" class="w-full h-auto"></canvas>
+    </div>
 
+    <script src="script.js"></script>
 </body>
 </html>
