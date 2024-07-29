@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Quote Creator Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js" type="module"></script>
+    <style>
+        .dark {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .emoji-picker {
+            width: 100%;
+            max-width: 320px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center transition-colors duration-300">
+    <div class="container mx-auto p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-xl transition-colors duration-300">
+        <h1 class="text-4xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200">TikTok Quote Creator Pro</h1>
+        <div class="space-y-4">
+            <div class="flex space-x-2">
+                <input id="quoteInput" type="text" placeholder="Enter your quote" class="flex-grow p-2 border rounded dark:bg-gray-700 dark:text-white">
+                <button id="emojiBtn" class="bg-yellow-400 text-white p-2 rounded hover:bg-yellow-500 transition">😊</button>
+            </div>
+            <input id="authorInput" type="text" placeholder="Enter author name" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
+            <div class="flex space-x-2">
+                <select id="backgroundSelect" class="flex-grow p-2 border rounded dark:bg-gray-700 dark:text-white">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="gradient">Gradient</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <input id="customColorInput" type="color" class="w-16 p-1 border rounded hidden">
+            </div>
+            <select id="fontSelect" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
+                <option value="Roboto">Roboto</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="Open Sans">Open Sans</option>
+                <option value="Lato">Lato</option>
+                <option value="Poppins">Poppins</option>
+            </select>
+            <div class="space-y-2">
+                <label for="fontSizeSlider" class="block dark:text-gray-200">Font Size: <span id="fontSizeValue">24</span>px</label>
+                <input id="fontSizeSlider" type="range" min="12" max="72" value="14" class="w-full">
+            </div>
+            <div class="space-y-2">
+                <label for="lineHeightSlider" class="block dark:text-gray-200">Line Height: <span id="lineHeightValue">1.5</span></label>
+                <input id="lineHeightSlider" type="range" min="1" max="3" step="0.1" value="1.5" class="w-full">
+            </div>
+            <button id="generateBtn" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Generate Quote</button>
+        </div>
+        <div id="quoteContainer" class="mt-8 p-6 rounded-lg flex items-center justify-center mx-auto" style="width: 360px; height: 640px;">
+            <div class="w-full">
+                <p id="quoteText" class="text-2xl font-bold text-center"></p>
+                <p id="authorText" class="text-xl text-center mt-4"></p>
+            </div>
+        </div>
+        <div class="flex space-x-2 mt-4">
+            <button id="downloadBtn" class="flex-grow bg-green-500 text-white p-2 rounded hover:bg-green-600 transition">Download Image</button>
+            <button id="toggleModeBtn" class="bg-purple-500 text-white p-2 rounded hover:bg-purple-600 transition">Toggle Dark Mode</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js';
+        const quoteInput = document.getElementById('quoteInput');
+        const authorInput = document.getElementById('authorInput');
+        const backgroundSelect = document.getElementById('backgroundSelect');
+        const customColorInput = document.getElementById('customColorInput');
+        const fontSelect = document.getElementById('fontSelect');
+        const fontSizeSlider = document.getElementById('fontSizeSlider');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const lineHeightSlider = document.getElementById('lineHeightSlider');
+        const lineHeightValue = document.getElementById('lineHeightValue');
+        const generateBtn = document.getElementById('generateBtn');
+        const quoteContainer = document.getElementById('quoteContainer');
+        const quoteText = document.getElementById('quoteText');
+        const authorText = document.getElementById('authorText');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const toggleModeBtn = document.getElementById('toggleModeBtn');
+        const emojiBtn = document.getElementById('emojiBtn');
+
+        let isDarkMode = false;
+
+        backgroundSelect.addEventListener('change', updateQuote);
+        customColorInput.addEventListener('input', updateQuote);
+        fontSelect.addEventListener('change', updateQuote);
+        fontSizeSlider.addEventListener('input', updateQuote);
+        lineHeightSlider.addEventListener('input', updateQuote);
+        quoteInput.addEventListener('input', updateQuote);
+        authorInput.addEventListener('input', updateQuote);
+
+        generateBtn.addEventListener('click', updateQuote);
+        downloadBtn.addEventListener('click', downloadQuote);
+        toggleModeBtn.addEventListener('click', toggleDarkMode);
+
+        emojiBtn.addEventListener('click', () => {
+            const picker = document.createElement('emoji-picker');
+            document.body.appendChild(picker);
+
+            picker.addEventListener('emoji-click', event => {
+                quoteInput.value += event.detail.unicode;
+                updateQuote();
+                document.body.removeChild(picker);
+            });
+        });
+
+        function updateQuote() {
+            quoteText.textContent = quoteInput.value;
+            authorText.textContent = authorInput.value ? `- ${authorInput.value}` : '';
+
+            let bgColor, textColor;
+            switch (backgroundSelect.value) {
+                case 'light':
+                    bgColor = 'white';
+                    textColor = 'black';
+                    break;
+                case 'dark':
+                    bgColor = 'black';
+                    textColor = 'white';
+                    break;
+                case 'gradient':
+                    bgColor = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    textColor = 'white';
+                    break;
+                case 'custom':
+                    bgColor = customColorInput.value;
+                    textColor = getContrastColor(bgColor);
+                    break;
+            }
+
+            quoteContainer.style.background = bgColor;
+            quoteContainer.style.color = textColor;
+
+            const font = fontSelect.value;
+            const fontSize = fontSizeSlider.value + 'px';
+            const lineHeight = lineHeightSlider.value;
+
+            fontSizeValue.textContent = fontSizeSlider.value;
+            lineHeightValue.textContent = lineHeight;
+
+            quoteText.style.fontFamily = font;
+            quoteText.style.fontSize = fontSize;
+            quoteText.style.lineHeight = lineHeight;
+            authorText.style.fontFamily = font;
+            authorText.style.fontSize = (parseInt(fontSizeSlider.value) * 0.8) + 'px';
+
+            customColorInput.classList.toggle('hidden', backgroundSelect.value !== 'custom');
+        }
+
+        function getContrastColor(hexColor) {
+            const r = parseInt(hexColor.substr(1, 2), 16);
+            const g = parseInt(hexColor.substr(3, 2), 16);
+            const b = parseInt(hexColor.substr(5, 2), 16);
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            return (yiq >= 128) ? 'black' : 'white';
+        }
+
+        function downloadQuote() {
+            html2canvas(quoteContainer).then(canvas => {
+                const link = document.createElement('a');
+                const timestamp = new Date().getTime();
+                const randomString = Math.random().toString(36).substring(2, 8);
+                const fileName = `tiktok_quote_${timestamp}_${randomString}.png`;
+                link.download = fileName;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark');
+            document.querySelector('.container').classList.toggle('dark:bg-gray-800');
+        }
+
+        // Initial update
+        updateQuote();
+    </script>
+</body>
+</html>
