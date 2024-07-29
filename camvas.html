@@ -8,19 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="min-h-screen bg-gray-100 p-8">
+<body class="min-h-screen bg-gray-100 p-4">
     <div class="max-w-4xl mx-auto">
         <h1 class="text-3xl font-bold mb-4 text-center">Advanced Abstract Art Generator</h1>
-        <div class="flex flex-wrap mb-4 gap-4">
-            <div class="flex-1 min-w-[200px]">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="col-span-1">
                 <label class="block mb-2">Warna 1</label>
                 <div id="color1Picker"></div>
             </div>
-            <div class="flex-1 min-w-[200px]">
+            <div class="col-span-1">
                 <label class="block mb-2">Warna 2</label>
                 <div id="color2Picker"></div>
             </div>
-            <div class="flex-1 min-w-[200px]">
+            <div class="col-span-1">
                 <label class="block mb-2">Jenis Abstrak</label>
                 <select id="abstractType" class="border p-2 w-full">
                     <option value="full">Full Abstract</option>
@@ -28,13 +28,14 @@
                     <option value="elegant">Elegant Abstract</option>
                     <option value="modern">Modern Abstract</option>
                     <option value="painting">Abstract Painting</option>
+                    <option value="claudeai">Abstract Claudeai</option>
                 </select>
             </div>
-            <div class="flex-1 min-w-[200px]">
+            <div class="col-span-1">
                 <label class="block mb-2">Jumlah Elemen</label>
-                <input type="number" id="elementCount" value="20" min="5" max="50" class="border p-2 w-full">
+                <input type="number" id="elementCount" value="5" min="5" max="50" class="border p-2 w-full">
             </div>
-            <div class="flex-1 min-w-[200px]">
+            <div class="col-span-2 sm:col-span-1">
                 <label class="block mb-2">Ukuran</label>
                 <select id="canvasSize" class="border p-2 w-full">
                     <option value="instagram">Instagram (1080x1080)</option>
@@ -42,7 +43,7 @@
                 </select>
             </div>
         </div>
-        <div class="flex flex-wrap gap-4 mb-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
             <button id="generateBtn" class="bg-blue-500 text-white px-4 py-2 rounded">
                 <i class="fas fa-sync-alt"></i> Gen
             </button>
@@ -61,7 +62,6 @@
             <canvas id="canvas" class="w-full border border-gray-300"></canvas>
         </div>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>

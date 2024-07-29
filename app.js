@@ -186,6 +186,7 @@ function drawFullAbstract(ctx, width, height, elementCount) {
     ctx.globalCompositeOperation = 'source-over';
 }
 
+///// //// 
 function drawMinimalistAbstract(ctx, width, height, elementCount) {
     // Background color
     ctx.fillStyle = color1Picker.color.hexString;
@@ -239,7 +240,7 @@ function getRandomColor(opacity) {
     return `rgba(${r},${g},${b},${opacity})`;
 }
 
-
+/////
 function drawElegantAbstract(ctx, width, height, elementCount) {
     // Gradient background
     const gradient = ctx.createLinearGradient(0, 0, width, height);
@@ -285,16 +286,23 @@ function drawElegantAbstract(ctx, width, height, elementCount) {
     }
 }
 
+
+/////////////////////
+
+
 function drawModernAbstract(ctx, width, height, elementCount) {
-    // Bold background
-    ctx.fillStyle = color1Picker.color.hexString;
+    // Gradient background
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, color1Picker.color.hexString);
+    gradient.addColorStop(1, color2Picker.color.hexString);
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
-    // Large geometric shapes
+    // Large geometric shapes with gradients
     for (let i = 0; i < elementCount / 2; i++) {
         const x = Math.random() * width;
         const y = Math.random() * height;
-        const size = Math.random() * 200 + 100;
+        const size = Math.random() * 300 + 150;
 
         ctx.beginPath();
         if (Math.random() > 0.5) {
@@ -309,32 +317,200 @@ function drawModernAbstract(ctx, width, height, elementCount) {
             }
             ctx.closePath();
         }
-        ctx.fillStyle = getRandomColor(0.7);
+        
+        const shapeGradient = ctx.createRadialGradient(x, y, 0, x, y, size/2);
+        shapeGradient.addColorStop(0, getRandomColor(0.7));
+        shapeGradient.addColorStop(1, getRandomColor(0.7));
+        ctx.fillStyle = shapeGradient;
         ctx.fill();
     }
 
-    // Overlapping lines
+    // Dynamic lines
     for (let i = 0; i < elementCount * 2; i++) {
         ctx.beginPath();
         ctx.moveTo(Math.random() * width, Math.random() * height);
-        ctx.lineTo(Math.random() * width, Math.random() * height);
+        
+        // Create curved lines
+        const cp1x = Math.random() * width;
+        const cp1y = Math.random() * height;
+        const cp2x = Math.random() * width;
+        const cp2y = Math.random() * height;
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, Math.random() * width, Math.random() * height);
+        
         ctx.strokeStyle = getRandomColor(0.8);
-        ctx.lineWidth = Math.random() * 10 + 2;
+        ctx.lineWidth = Math.random() * 15 + 2;
         ctx.stroke();
     }
 
-    // Contrasting dots
+    // Glowing dots
     for (let i = 0; i < elementCount * 3; i++) {
         const x = Math.random() * width;
         const y = Math.random() * height;
-        const size = Math.random() * 10 + 2;
+        const size = Math.random() * 15 + 5;
+
+        const dotGradient = ctx.createRadialGradient(x, y, 0, x, y, size);
+        dotGradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+        dotGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
+        dotGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
         ctx.beginPath();
-        ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-        ctx.fillStyle = color2Picker.color.hexString;
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fillStyle = dotGradient;
         ctx.fill();
     }
+
+    // Add some texture
+    ctx.globalCompositeOperation = 'overlay';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    for (let i = 0; i < width; i += 4) {
+        for (let j = 0; j < height; j += 4) {
+            if (Math.random() > 0.5) {
+                ctx.fillRect(i, j, 4, 4);
+            }
+        }
+    }
+    ctx.globalCompositeOperation = 'source-over';
 }
+
+
+function createModernAbstract(ctx, width, height, elementCount) {
+    // Set up color scheme
+    const bgColor = color1Picker.color.hexString;
+    const accentColor = color2Picker.color.hexString;
+    const palette = generateColorPalette(bgColor, accentColor);
+
+    // Fill background
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, width, height);
+
+    // Create main focal point
+    drawFocalPoint(ctx, width, height, palette);
+
+    // Add geometric and organic elements
+    for (let i = 0; i < elementCount; i++) {
+        if (Math.random() < 0.7) {
+            drawGeometricElement(ctx, width, height, palette);
+        } else {
+            drawOrganicElement(ctx, width, height, palette);
+        }
+    }
+
+    // Add final touches
+    addTexture(ctx, width, height);
+    addMinimalLines(ctx, width, height, accentColor);
+}
+
+function generateColorPalette(baseColor, accentColor) {
+    // Generate a palette based on the base and accent colors
+    return [
+        baseColor,
+        accentColor,
+        adjustColor(baseColor, 30),
+        adjustColor(accentColor, -30),
+        adjustColor(mixColors(baseColor, accentColor), 15)
+    ];
+}
+
+function drawFocalPoint(ctx, width, height, palette) {
+    const size = Math.min(width, height) * 0.4;
+    const x = width / 2;
+    const y = height / 2;
+
+    ctx.beginPath();
+    ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+    ctx.fillStyle = palette[1];
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(x, y, size / 3, 0, Math.PI * 2);
+    ctx.fillStyle = palette[2];
+    ctx.fill();
+}
+
+function drawGeometricElement(ctx, width, height, palette) {
+    const x = Math.random() * width;
+    const y = Math.random() * height;
+    const size = Math.random() * 100 + 50;
+
+    ctx.beginPath();
+    if (Math.random() < 0.5) {
+        ctx.rect(x - size / 2, y - size / 2, size, size);
+    } else {
+        const points = Math.floor(Math.random() * 3) + 3;
+        for (let i = 0; i < points; i++) {
+            const angle = (i / points) * Math.PI * 2;
+            const px = x + Math.cos(angle) * size / 2;
+            const py = y + Math.sin(angle) * size / 2;
+            i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+    }
+    ctx.fillStyle = palette[Math.floor(Math.random() * palette.length)];
+    ctx.fill();
+}
+
+function drawOrganicElement(ctx, width, height, palette) {
+    const x = Math.random() * width;
+    const y = Math.random() * height;
+    const radius = Math.random() * 50 + 25;
+
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    for (let i = 1; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        const dist = radius * (0.8 + Math.random() * 0.4);
+        ctx.lineTo(x + Math.cos(angle) * dist, y + Math.sin(angle) * dist);
+    }
+    ctx.closePath();
+    ctx.fillStyle = palette[Math.floor(Math.random() * palette.length)];
+    ctx.fill();
+}
+
+function addTexture(ctx, width, height) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'overlay';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    for (let i = 0; i < width; i += 4) {
+        for (let j = 0; j < height; j += 4) {
+            if (Math.random() > 0.5) {
+                ctx.fillRect(i, j, 4, 4);
+            }
+        }
+    }
+    ctx.restore();
+}
+
+function addMinimalLines(ctx, width, height, color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * width, 0);
+        ctx.lineTo(Math.random() * width, height);
+        ctx.stroke();
+    }
+}
+
+function adjustColor(color, amount) {
+    const num = parseInt(color.slice(1), 16);
+    const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+    const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+    const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
+
+function mixColors(color1, color2) {
+    const r1 = parseInt(color1.slice(1, 3), 16);
+    const g1 = parseInt(color1.slice(3, 5), 16);
+    const b1 = parseInt(color1.slice(5, 7), 16);
+    const r2 = parseInt(color2.slice(1, 3), 16);
+    const g2 = parseInt(color2.slice(3, 5), 16);
+    const b2 = parseInt(color2.slice(5, 7), 16);
+    const r = Math.round((r1 + r2) / 2);
+    const g = Math.round((g1 + g2) / 2);
+    const b = Math.round((b1 + b2) / 2);
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
+
 
 function generateAbstractArt() {
     setCanvasSize();
@@ -357,6 +533,9 @@ function generateAbstractArt() {
             break;
         case 'painting':
             drawAbstractPainting(ctx, canvas.width, canvas.height, elementCount);
+            break;
+        case 'claudeai':
+            createModernAbstract(ctx, canvas.width, canvas.height, elementCount);
             break;
     }
 
