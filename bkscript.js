@@ -182,6 +182,12 @@ function drawGeometricPattern(ctx, x, y, size) {
     ctx.stroke();
 }
 
+
+
+////////////////
+
+
+
 function drawGeometricMosaic(ctx, width, height) {
     const tileSize = 50;
     const colors = [color1Picker.color.hexString, color2Picker.color.hexString];
