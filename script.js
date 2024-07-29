@@ -25,6 +25,9 @@ const fontColorPicker = new iro.ColorPicker('#fontColorPicker', { width: 100, co
 
 let currentQuote = null;
 
+const toggleQuoteBtn = document.getElementById('toggle-quote-btn');
+let isQuoteVisible = true;
+
 const defaultSettings = {
     font: 'Playfair Display',
     bgStyle: 'gradient',
@@ -34,6 +37,14 @@ const defaultSettings = {
     fontSize: 50,
     lineHeight: 1.5
 };
+
+
+
+toggleQuoteBtn.addEventListener('click', function() {
+    isQuoteVisible = !isQuoteVisible;
+    toggleQuoteBtn.textContent = isQuoteVisible ? 'Hide Quote' : 'Show Quote';
+    generateQuoteImage(false);
+});
 
 function setCanvasSize(width, height) {
     canvas.width = width;
@@ -921,92 +932,117 @@ function drawFullyAbstractArt(ctx, width, height) {
 }
 
 async function generateQuoteImage(newQuote = false) {
-    if (newQuote) {
-        const category = categorySelect.value;
-        currentQuote = await fetchQuote(category);
-    }
+  if (newQuote) {
+    const category = categorySelect.value;
+    currentQuote = await fetchQuote(category);
+  }
 
-    const font = fontSelect.value;
-    const bgStyle = bgStyleSelect.value;
-    const fontSize = fontSizeInput.value;
-    const lineHeight = lineHeightInput.value;
+  const font = fontSelect.value;
+  const bgStyle = bgStyleSelect.value;
+  const fontSize = fontSizeInput.value;
+  const lineHeight = lineHeightInput.value;
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Background
-    if (bgStyle === 'gradient') {
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        gradient.addColorStop(0, color1Picker.color.hexString);
-        gradient.addColorStop(1, color2Picker.color.hexString);
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    } else if (bgStyle === 'solid') {
-        ctx.fillStyle = color1Picker.color.hexString;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    } else if (bgStyle === 'pattern') {
-        drawPattern(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'geometric') {
-        drawGeometricMosaic(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'mandala') {
-        drawMandala(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'waves') {
-        drawAbstractWaves(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'dotted') {
-        drawDottedTexture(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'minimalist') {
-        drawMinimalistLines(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'GeometricPattern') {
-        drawGeometricPattern(ctx, canvas.width, canvas.height); 
-    } else if (bgStyle === 'drawWavePattern') {
-      drawWavePattern(ctx, canvas.width, canvas.height); drawWavePattern
-    } else if (bgStyle === 'drawModernAbstractPattern') {
-        drawModernAbstractPattern(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'drawAbstractFlowerPattern') {
-        drawAbstractFlowerPattern(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'drawMinimalistGeometry') {
-        drawMinimalistGeometry(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'drawDigitalMosaic') {
-        drawDigitalMosaic(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'drawAbstractSpiral') {
-        drawAbstractSpiral(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'drawDynamicLines') {
-        drawDynamicLines(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'drawDotMatrix') {
-        drawDotMatrix(ctx, canvas.width, canvas.height);
-    } else if (bgStyle === 'drawFullyAbstractArt') {
-        drawFullyAbstractArt(ctx, canvas.width, canvas.height);
-    }
-    
-    
+  // Background
+  if (bgStyle === "gradient") {
+    const gradient = ctx.createLinearGradient(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+    gradient.addColorStop(0, color1Picker.color.hexString);
+    gradient.addColorStop(1, color2Picker.color.hexString);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else if (bgStyle === "solid") {
+    ctx.fillStyle = color1Picker.color.hexString;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else if (bgStyle === "pattern") {
+    drawPattern(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "geometric") {
+    drawGeometricMosaic(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "mandala") {
+    drawMandala(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "waves") {
+    drawAbstractWaves(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "dotted") {
+    drawDottedTexture(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "minimalist") {
+    drawMinimalistLines(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "GeometricPattern") {
+    drawGeometricPattern(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawWavePattern") {
+    drawWavePattern(ctx, canvas.width, canvas.height);
+    drawWavePattern;
+  } else if (bgStyle === "drawModernAbstractPattern") {
+    drawModernAbstractPattern(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawAbstractFlowerPattern") {
+    drawAbstractFlowerPattern(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawMinimalistGeometry") {
+    drawMinimalistGeometry(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawDigitalMosaic") {
+    drawDigitalMosaic(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawAbstractSpiral") {
+    drawAbstractSpiral(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawDynamicLines") {
+    drawDynamicLines(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawDotMatrix") {
+    drawDotMatrix(ctx, canvas.width, canvas.height);
+  } else if (bgStyle === "drawFullyAbstractArt") {
+    drawFullyAbstractArt(ctx, canvas.width, canvas.height);
+  }
 
-
+  if (isQuoteVisible) {
     // Quote text
     ctx.font = `bold ${fontSize}px "${font}"`;
     ctx.fillStyle = fontColorPicker.color.hexString;
-    ctx.textAlign = 'center';
-    
+    ctx.textAlign = "center";
+
     // Calculate text height
     const quoteText = `"${currentQuote.text}"`;
     const textMetrics = ctx.measureText(quoteText);
-    const textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
-    const totalTextHeight = textHeight * (quoteText.split(' ').length / 3) * lineHeight; // Rough estimate
+    const textHeight =
+      textMetrics.actualBoundingBoxAscent +
+      textMetrics.actualBoundingBoxDescent;
+    const totalTextHeight =
+      textHeight * (quoteText.split(" ").length / 3) * lineHeight; // Rough estimate
 
     // Calculate starting Y position to center the text
     let startY = (canvas.height - totalTextHeight) / 2;
 
-    let endY = wrapText(ctx, quoteText, canvas.width / 2, startY, canvas.width * 0.8, parseInt(fontSize) * lineHeight);
+    let endY = wrapText(
+      ctx,
+      quoteText,
+      canvas.width / 2,
+      startY,
+      canvas.width * 0.8,
+      parseInt(fontSize) * lineHeight
+    );
 
     // Author
     ctx.font = `${fontSize * 0.7}px "${font}"`;
     ctx.fillStyle = fontColorPicker.color.hexString;
-    ctx.fillText(`- ${currentQuote.author}`, canvas.width / 2, endY + parseInt(fontSize) * lineHeight);
+    ctx.fillText(
+      `- ${currentQuote.author}`,
+      canvas.width / 2,
+      endY + parseInt(fontSize) * lineHeight
+    );
 
     // Category (using default font and fixed size)
     ctx.font = `bold 24px Arial`;
     ctx.fillStyle = fontColorPicker.color.hexString;
-    ctx.fillText(`#${categorySelect.value}`, canvas.width / 2, canvas.height - 30);
+    ctx.fillText(
+      `#${categorySelect.value}`,
+      canvas.width / 2,
+      canvas.height - 30
+    );
+  }
 }
+
+
 
 function resetToDefault() {
     fontSelect.value = defaultSettings.font;
