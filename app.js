@@ -381,10 +381,11 @@ copyTextBtn.addEventListener('click', () => {
 
 function downloadImage() {
     const link = document.createElement('a');
-    link.download = 'abstract-art.png';
+    link.download = `${pieceNumber}.png`; // Use pieceNumber as the file name
     link.href = canvas.toDataURL();
     link.click();
 }
+
 
 generateBtn.addEventListener('click', generateAbstractArt);
 downloadBtn.addEventListener('click', downloadImage);
