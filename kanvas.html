@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract Canvas Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-4">Abstract Canvas Generator</h1>
+        <div class="mb-4">
+            <button id="generateBtn" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Generate Baru</button>
+            <button id="downloadBtn" class="bg-green-500 text-white px-4 py-2 rounded">Unduh Gambar</button>
+        </div>
+        <canvas id="canvas" width="800" height="800" class="w-full border border-gray-300"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        function generateRandomElement() {
+            return {
+                type: ['circle', 'rectangle', 'triangle'][Math.floor(Math.random() * 3)],
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 100 + 20,
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                rotation: Math.random() * Math.PI * 2,
+            };
+        }
+
+        function drawElement(el) {
+            ctx.save();
+            ctx.fillStyle = el.color;
+            ctx.translate(el.x, el.y);
+            ctx.rotate(el.rotation);
+
+            switch (el.type) {
+                case 'circle':
+                    ctx.beginPath();
+                    ctx.arc(0, 0, el.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+                case 'rectangle':
+                    ctx.fillRect(-el.size / 2, -el.size / 2, el.size, el.size);
+                    break;
+                case 'triangle':
+                    ctx.beginPath();
+                    ctx.moveTo(0, -el.size / 2);
+                    ctx.lineTo(-el.size / 2, el.size / 2);
+                    ctx.lineTo(el.size / 2, el.size / 2);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+            }
+
+            ctx.restore();
+        }
+
+        function generateAbstractBackground() {
+            const backgroundColor = `hsl(${Math.random() * 360}, 50%, 80%)`;
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const elements = Array(20).fill().map(generateRandomElement);
+            elements.forEach(drawElement);
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'abstract-background.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        generateBtn.addEventListener('click', generateAbstractBackground);
+        downloadBtn.addEventListener('click', downloadImage);
+
+        // Generate initial background
+        generateAbstractBackground();
+    </script>
+</body>
+</html>
